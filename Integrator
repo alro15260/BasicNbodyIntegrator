@@ -528,6 +528,3 @@ with writer.saving(fig1, "randomCube.mp4", 100):
         plt.draw()
         plt.pause(.01)
         writer.grab_frame()
-
-FinalProject_alro1526 (1).py
-Displaying FinalProject_alro1526 (1).py.
