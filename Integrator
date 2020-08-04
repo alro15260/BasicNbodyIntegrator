@@ -1,12 +1,7 @@
-get_ipython().run_line_magic('matplotlib', 'inline')
 import matplotlib.pyplot as plt
 import numpy as np
+import updateParticles function from leapfrog.py
 
-
-# In[20]:
-
-
-#I will need to import some previously defined useful functions for gravity from homework 4
 def getForce(mi, mj, sep):
     """
     Compute magnitude of gravitational force between two bodies.
@@ -157,22 +152,6 @@ def netForces(masses, positions):
         
     return force_list
 
-
-# In[21]:
-
-
-#Validation of Net Force function
-test_masses = [6e24,70.]
-radiusEarth = 6380000 # m
-test_positions = [np.array([0, 0, 0])*radiusEarth, np.array([0, 0, 1])*radiusEarth]
-test_forces = netForces(test_masses,test_positions)
-test_forces
-
-
-# In[22]:
-
-
-#import updateParticles function from leapfrog.py
 def updateParticles(masses, positions, velocities, dt):
     """
     Evolve particles in time via leap-frog integrator scheme. This function
@@ -231,13 +210,6 @@ def updateParticles(masses, positions, velocities, dt):
 
     return endingPositions, endingVelocities
 
-
-# In[23]:
-
-
-#Testing Update Particles with 1kg object 1 earth radii away from earth center
-#I can predict that the earth will move very little, and the object will move significantly
-
 # the masses in the list are in kg
 testmasses = np.array([1, 1e24])
 au = 1.496e+11  # m per AU
@@ -247,10 +219,6 @@ testpositions = np.array([[ 0,  0,  6731*1000], [0, 0 , 0]])
 testvelocities = np.array([[0, 0, 0], [0, 0, 0]])
 print(testvelocities.shape)
 updateParticles(testmasses, testpositions, testvelocities, dt = 1)
-
-
-# In[24]:
-
 
 def calculateTrajectories(initialMasses, initialPositions, initialVelocities, time, dt):
     '''
@@ -289,242 +257,3 @@ def calculateTrajectories(initialMasses, initialPositions, initialVelocities, ti
         initialVelocities = values[1]
     return times, np.array(positions), np.array(velocities)
 
-
-# In[25]:
-
-
-def DataDescription(Data):
-    '''
-    Prints the description of data for a datset
-    
-    Arguements
-    ----------
-    Data: a numpy array of the data you wish to analyze
-    
-    Returns
-    -------
-    A description of the data'''
-    print('Shape:',Data.shape)
-    print('Min:', np.min(Data))
-    print('Max:',np.max(Data))
-    print('Mean:', np.mean(Data))
-    print('Median:',np.median(Data))
-    print('STD:',np.std(Data))
-    print('95th Percentile:', np.percentile(Data,95))
-    print('5th Percentile:', np.percentile(Data,5))
-    
-#Testing calculateTrajectories
-au = 1.496e11  #m per AU
-testingmasses = np.array([1.989e30, 5.972e24])
-testingpositions = [np.array([-3e-6, 0, 0])*au,
-                    np.array([0.999997, 0, 0])*au]
-testingvelocities = [np.array([0, -8.94e-2, 0]),
-                     np.array([0, 2.98e4, 0])]
-times1, positions1, velocities1 = calculateTrajectories(testingmasses, testingpositions, testingvelocities, 86400000, 8640)
-DataDescription(positions1)
-DataDescription(velocities1)
-print(times1)
-print(positions1)
-print(velocities1)
-
-
-# In[35]:
-
-
-plt.plot(times1/86400, positions1[:,:,0]/au)
-plt.title('Motion of the Earth around the Sun')
-plt.xlabel("time(days)")
-plt.ylabel("x-position (AU)")
-plt.show()
-
-plt.plot(positions1[:,:,0]/au, positions1[:,:,1]/au)
-plt.title('Motion of the Earth Around the Sun in x-y plane')
-plt.axis("scaled")
-plt.xlabel("x-position (AU)")
-plt.ylabel("y-position (AU)")
-plt.show()
-
-plt.plot(times1[:]/86400, velocities1[:,0,0])
-plt.title("Sun's Apparent Motion")
-plt.xlabel("time (days)")
-plt.ylabel("x-velocity (m/s)")
-plt.show()
-
-
-# Based on the first plot, the period of the Earth's orbit appears to coorespond to 365 days, which is correct.  Furthermore, as shown by the third plot, the sun's apparent motion is extremly small.  One would need to measure its velocity with precision to roughly a hundredth of a meter per second.
-
-# In[36]:
-
-
-#Decreasing the velocities by a factor of 2
-testingmasses2 = np.array([1.989e30, 5.972e24])
-testingpositions2 = [np.array([-3e-6, 0, 0])*au,
-                    np.array([0.999997, 0, 0])*au]
-testingvelocities2 = [np.array([0, -0.0447, 0]),
-                     np.array([0, 14900.0, 0])]
-times2, positions2, velocities2 = calculateTrajectories(testingmasses2, testingpositions2, testingvelocities2, 86400000, 8640)
-DataDescription(positions2)
-DataDescription(velocities2)
-print(times2)
-print(positions2)
-print(velocities2)
-
-
-# In[38]:
-
-
-plt.plot(times2/86400, positions2[:,:,0]/au)
-plt.title('Motion of the Earth around the Sun')
-plt.xlabel("time(days)")
-plt.ylabel("x-position (AU)")
-plt.show()
-
-plt.plot(positions2[:,:,0]/au, positions2[:,:,1]/au)
-plt.title('Motion of the Earth Around the Sun in x-y plane')
-plt.axis("scaled")
-plt.xlabel("x-position (AU)")
-plt.ylabel("y-position (AU)")
-plt.show()
-
-plt.plot(times2[:]/86400, velocities2[:,0,0])
-plt.title("Sun's Apparent Motion")
-plt.xlabel("time (days)")
-plt.ylabel("x-velocity (m/s)")
-plt.show()
-
-
-# With a reduction in the initial velocities by a factor of two, the orbit of Earth becomes far more elliptical is shown in the second graph. The sun also traces out a more elliptical path as shown in graph 3.  If earth slowed down, Earth would get closer to the sun to compensate, thus decreasing the length of the year shown in a decrease of the period in graph 1.  It appears to be closer to 200 days now, rather than 365 previously.
-
-# In[39]:
-
-
-get_ipython().system('head kepler16.txt')
-keplerdata = np.loadtxt('kepler16.txt')
-print(keplerdata)
-
-
-# In[40]:
-
-
-keplermasses = keplerdata[0][0], keplerdata[1][0], keplerdata[2][0]
-position1 = keplerdata[0][1], keplerdata[0][2], keplerdata[0][3]
-position2 = keplerdata[1][1], keplerdata[1][2], keplerdata[1][3]
-position3 = keplerdata[2][1], keplerdata[2][2], keplerdata[2][3]
-velocity1 = keplerdata[0][4], keplerdata[0][5], keplerdata[0][6]
-velocity2 = keplerdata[1][4], keplerdata[1][5], keplerdata[1][6]
-velocity3 = keplerdata[2][4], keplerdata[2][5], keplerdata[2][6]
-keplermasses1 = np.array(keplermasses)
-keplerpositions = np.array((list(position1), list(position2), list(position3)))
-keplervelocities = np.array((list(velocity1), list(velocity2), list(velocity3)))
-print(keplermasses1)
-print(keplerpositions)
-print(keplervelocities)
-
-
-# In[41]:
-
-
-plt.scatter(keplerpositions[:,0]/au, keplerpositions[:,2]/au, s= (keplermasses1[:]/np.sum(keplermasses1))*2e3)
-plt.quiver(keplerpositions[:,0]/au, keplerpositions[:,2]/au, keplervelocities[:,0], keplervelocities[:,2])
-plt.title('Position of Particles in x-z Plane')
-plt.xlabel('x Position(AU)')
-plt.ylabel('z Position(AU)')
-
-
-# In[42]:
-
-
-kepler500times, kepler500positions, kepler500velocities = calculateTrajectories(keplermasses1, keplerpositions, keplervelocities, 43200000, 43200)
-print(kepler500times)
-print(kepler500positions)
-print(kepler500velocities)
-
-
-# In[43]:
-
-
-plt.plot(kepler500times/86400, kepler500positions[:,:,0]/au)
-plt.title('Motion of bodies in Kepler System')
-plt.xlabel("time(days)")
-plt.ylabel("x-position (AU)")
-plt.show()
-
-
-# The planet in the binary system appears to have a period of just under 300 days, while the stars themselves both have periods of just under 100 days.  This will be helpful in our animation to see if the periods roughly coorespond to that.
-
-# In[62]:
-
-
-import matplotlib.animation as ani
-FFMpegWriter = ani.writers['ffmpeg']
-writer = FFMpegWriter(fps=50)
-fig = plt.figure(figsize=(5, 5))
-#animation for part 10
-with writer.saving(fig, "Kepleranimation.mp4", 100):
-    f = range(len(kepler500times))
-    for i in f:
-        plt.cla()
-        
-        plt.scatter(kepler500positions[i,:,0]/au, kepler500positions[i,:,2]/au, c=['blue', 'green', 'purple'],
-                   s=keplermasses1/keplermasses1.max()*90+20)
-        
-        plt.quiver(kepler500positions[i,:,0]/au, kepler500positions[i,:,2]/au, kepler500velocities[i,:,0], kepler500velocities[i,:,2], scale=(np.sqrt((kepler500velocities[0,:,0]**2 + kepler500velocities[0,:,2]**2)*100)))
-        
-        plt.ylim(-1, 1)
-        plt.xlim(-1, 1)
-        
-        plt.xlabel("x-position (AU)")
-        plt.ylabel("z-position (AU)")
-        plt.title(('Kepler-16ABb \nPosition at {} days').format((kepler500times[i])/(86400)))
-        writer.grab_frame()
-        if i % 10 == 0:
-            print("Saved frame {}/{}.".format(i, max(f)))
-
-
-# In[56]:
-
-
-#Choose your own adventure
-data = np.loadtxt("randomCube.txt", unpack=True).T
-number = len(data)
-masses0 = data[0: number, 0:1]
-positions0 = data[0: number, 1:4]
-velocity0 = data[0: number, 4:7]
-#Integrate Trajectories of randomCube.txt and print results to see what we're working with
-timescube, positionscube, velocitiescube = calculateTrajectories(masses0, positions0, velocity0, 43200000, 8640)
-
-
-# In[58]:
-
-
-#part 12 4-D Animation
-from mpl_toolkits import mplot3d
-import matplotlib.animation as ani
-FFMpegWriter = ani.writers['ffmpeg']
-writer = ani.FFMpegWriter(fps=70)
-fig1 = plt.figure(figsize=(10, 10))
-#ax = plt.axes(projection = '3d')
-with writer.saving(fig1, "randomCube.mp4", 100):
-    f = range(len(timescube))
-    for i in f:
-        plt.cla()
-        ax = plt.axes(projection = '3d')
-        x = (positionscube[i,:,0]/au)
-        y = (positionscube[i,:,1]/au)
-        z = (positionscube[i,:,2]/au)
-        ax.scatter3D(x, y, z)
-        ax.set_xlim3d(-2,2)
-        ax.set_ylim3d(-2,2)
-        ax.set_zlim3d(-2,2)
-        ax.set_xlabel("x-position (AU)")
-        ax.set_ylabel("y-position (AU)")
-        ax.set_zlabel("z-position (AU)")
-        plt.title(('randomCube \nPosition at {} days').format((timescube[i])/(86400)))
-        writer.grab_frame()
-        if i % 10 == 0:
-            print("Saved frame {}/{}.".format(i, max(f)))
-    for angle in range(0, 360):
-        ax.view_init(0, angle)
-        plt.draw()
-        plt.pause(.01)
-        writer.grab_frame()
